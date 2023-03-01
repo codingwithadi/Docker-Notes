@@ -24,7 +24,7 @@
      
   4) Run Image ->
   
-     - hit cmd -> docker images
+     - hit command -> docker images ->
        check image and use image-id for run image 
       
      - docker run --name nameforcontainer put-image-id
