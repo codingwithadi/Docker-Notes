@@ -6,7 +6,7 @@
 # How to deploy springboot application on docker?
 
 
-  1) create build (.jar) of your springboot application using this command->
+  1) create build (.jar) file of your springboot application using this command->
      
      - mvn clean install -DskipTests
       - this will create a package of your application. having name with .jar extension.
