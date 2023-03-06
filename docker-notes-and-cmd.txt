@@ -1,0 +1,275 @@
+ ===================Docker Notes======================
+
+
+docker hub ==> you get all of official images, information about it.
+here you can make your own
+
+ ==================Docker CMD==========================
+
+docker run container_name/image_name
+
+i.e. -> docker run ubuntu
+process start running and pull the container -> twooperations at a same time
+
+docker pull image_name
+you can download the container/images
+
+docker ps
+show list of containers running
+
+docker ps -a
+show all list of containers
+
+docker exec container-id operation
+execute the cmd on running container
+execute cmd for run operations
+
+
+docker images
+show list of images
+
+docker rmi image-name
+remove image from host
+
+docker rm container-id/name
+remove image from system
+
+docker run ubuntu sleep 5
+run ubuntu image and its a sleep for 5 seconds
+any container by default run and exit because its run operate and exit
+
+but problem is when you run container then prompt will lock
+resolve this with 
+
+docker run -d repo-name/container name
+
+-d --> run on its detach mode you can use prompt and your container run in background.
+
+again you attach again ->
+docker attach container-id
+you can get aatached with container
+
+docker stop container-id/name
+stop running container. when you remove container you must stop container first and then remove
+
+docker rm container-id/name
+remove container from system
+
+docker rm name/id 1 2 3
+at a time remove container
+
+docker run image-name:version
+you run image with specific version. by default latest version of image
+
+when you want to work with interactive mode then add -i. because docker dosent provide by default.
+
+docker run -i name
+
+docker run -it name
+iteractive mode with terminal
+
+mentioning ports/ exposing ports
+docker run -p hostport:exposeport webapp
+
+run app on exposing port you mentioned.
+i.e. -> docker run -p 8085:8080 webapp
+
+
+
+=====================DOCKER IMAGE==============================
+
+
+--> prune for remove all
+
+--> docker image
+
+how to host website in docker
+
+docker run -it ubuntu bash
+apt-get update
+apt-get install -y python
+apt-get install python-pip
+pip install flask
+
+copy source code
+cat > /opt/app.py
+
+run cmd for host
+FLASK_APP = opt/app.py flask run --host=0.0.0.0
+test on browser
+172.72.0.2:5000/how are you
+
+
+how to make docker file
+=======================================================
+FROM ubuntu
+
+RUN apt-get update
+RUN apt-get install -y python python-pip
+RUN pip install flask
+
+COPY app.py /opt/app.py
+ENTRYPOINT FLASK_APP=/opt/app.py flask run --host=0.0.0.0
+
+=========================================================
+
+app.py
+
+import os
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def main():
+    return "Welcome!"
+
+@app.route('/how are you')
+def hello():
+    return 'I am good, how about you?'
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
+
+===============================================================
+
+creating images
+after that ->
+
+docker build .
+
+and then for tagging ->
+
+docker build . -t my-simple-webapp
+
+and then you can run docker image ->
+
+docker run my-simple-webapp
+
+--> docker login
+--  username
+--  password
+
+then docker build -t reponame/appname
+
+
+docker push repo/appname
+
+your docker images is now in your docker hub repo
+
+==============================================================
+FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]
+================================================================
+
+===================YAML file============= .yml/.yaml ===========
+
+yet another markup language
+yaml aint markup lanuage
+
+this is a human readable file for writeing configuration file in easy manner.
+hevily used in devops ecosystem.
+
+==================================================================
+
+Docker compose ->
+docker compose means to get all tech stak together using docker-compose.yml file
+in that file ypu can add mapping of tech you use and all about your instruction.
+
+===================================================================
+
+docker-compose.yml
+
+version: '3.0'
+services:
+  redis:
+    image: imagename
+  webapp:
+    image: imagename
+    ports:
+      - 8085:5000
+
+
+and then hit the below command
+docker-compose up -d
+
+=====================================================================
+
+push pull repo in private rgistry
+docker push/pull [server-addr/image-name]
+
+----------------------------docker registry--------------------------
+for registring images
+
+1-> docker pull image name
+2-> docker image tag name localhost:port/imagename
+2-> docker push localhost:portname/imagename
+
+=======================================================================
+
+docker engine
+-docker cli
+-rest api
+-docker deamon
+
+docker PID
+you can check docker process id ->
+
+docker exac containername/ID ps -eaf
+now you can see all details about your containers networks and memory
+
+for on host ->
+ps -eaf
+
+========================================================================
+
+---------------------------------storing--------------------------------
+
+-v for adding volume in directory sytem file
+use of volume is when the database crashed then we can redeploy same application and this time data is there 
+because we can add volume and data present in our opt/data file or our directoy
+
+docker run -v /opt/data:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql
+
+=========================================================================
+
+-----------------------------docker network-------------------------------
+
+bridge -> default ip 172.17.0.1 here we have to do port exposing like -p host:expose
+
+none and  = > no
+host network => 5000 it can directly access externally.
+
+docker run --network=none/host image 
+
+== how to find number of network on docker 
+ =>> docker network ls
+
+== how to find bridge subnet
+==>> docker inspect bridge
+
+set up bridge name and subnet
+docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.1 wp-mysql-network
+
+==========================================================================
+container orchestration
+with the help of this tool we are manage clusters, load balancing, and much more automatically with help of thi.
+
+solutions for this ->
+docker swarm -> docker
+kubernates -> google
+mesos -> apache
+
+==========================================================================
+
+clustor -->
+here all node/machine get all together and automate them using master node/machine.
+
